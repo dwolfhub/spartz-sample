@@ -1,17 +1,27 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
+/**
+ * IOC Container Bindings
+ */
+App::bind('ICityQueryRepository', 'CityQueryRepository');
+App::bind('IUserQueryRepository', 'UserQueryRepository');
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+/**
+ * List all cities in a state
+ */
+Route::get('/v1/states/{state}/cities.json', 'CityController@citiesByState');
+
+/**
+ * List cities within a variable mile radius of a city
+ */
+Route::get('/v1/states/{state}/cities/{city}.json', 'CityController@citiesByCityAndRadius');
+
+/**
+ * Allow a user to indicate they have visited a particular city.
+ */
+Route::post('/v1/users/{user_id}/visits', 'UserController@createUserVisit');
+
+/**
+ * Return a list of cities the user has visited
+ */
+Route::get('/v1/users/{user_id}/visits', 'UserController@getUserVisitsByUserId');
