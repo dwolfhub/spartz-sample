@@ -1,4 +1,4 @@
 spartz-sample
 =============
 
-Sparts Sample
+Spartz Sample
