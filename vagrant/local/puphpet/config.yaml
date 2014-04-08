@@ -1,8 +1,8 @@
 ---
 vagrantfile-local:
     vm:
-        box: centos64-x64-vbox43-1383512148
-        box_url: 'http://box.puphpet.com/centos64-x64-vbox43.box'
+        box: debian-wheezy72-x64-vbox43
+        box_url: 'http://box.puphpet.com/debian-wheezy72-x64-vbox43.box'
         hostname: null
         network:
             private_network: 192.168.56.101
@@ -27,8 +27,8 @@ vagrantfile-local:
                     - '--parser future'
         synced_folder:
             oAAlwHl7uNZn:
-                source: ./src/
-                target: /var/www
+                source: ../../src/
+                target: /var/www/spartz.dev/
                 nfs: 'false'
         usable_port_range: 2200..2250
     ssh:
@@ -93,10 +93,10 @@ nginx:
     install: ''
     vhosts:
         CYMaD7fl3kak:
-            server_name: sample.dev
+            server_name: spartz.dev
             server_aliases:
-                - sample.dev
-            www_root: /var/www/awesome.dev
+                - www.spartzdev.com
+            www_root: /var/www/spartz.dev/public/
             listen_port: '80'
             index_files:
                 - index.php
@@ -111,6 +111,7 @@ php:
             - cli
             - intl
             - mcrypt
+            - mbstring
         pear: {  }
         pecl:
             - pecl_http
@@ -133,18 +134,18 @@ drush:
     settings:
         drush.tag_branch: 6.x
 mysql:
-    install: 0
-    root_password: '123'
+    install: '1'
+    root_password: p@ssw0rd
     phpmyadmin: 0
     adminer: 0
     databases:
         oCzusWCsInqE:
             grant:
                 - ALL
-            name: dbname
+            name: spartz
             host: localhost
-            user: dbuser
-            password: '123'
+            user: spartz
+            password: p@ssw0rd
             sql_file: ''
 postgresql:
     install: 0
@@ -156,7 +157,7 @@ postgresql:
     databases: {  }
     adminer: 0
 mariadb:
-    install: '1'
+    install: 0
     root_password: '123'
     phpmyadmin: 0
     adminer: 0
