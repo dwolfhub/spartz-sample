@@ -1,5 +1,4 @@
 # spartz-sample
-=============
 
 ## If I had more time
 
