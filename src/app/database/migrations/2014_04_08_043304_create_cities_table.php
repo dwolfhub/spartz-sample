@@ -15,13 +15,13 @@ class CreateCitiesTable extends Migration {
         Schema::create('cities', function ($table)
         {
             $table->increments('id');
-            $table->string('name');
-            $table->string('state');
-            $table->double('latitude', 3, 6);
-            $table->double('longitude', 3, 6);
+            $table->string('name', 50);
+            $table->string('state', 2);
+            $table->string('status', 25);
+            $table->double('latitude', 9, 6);
+            $table->double('longitude', 9, 6);
             $table->timestamps();
         });
-        DB::statement('ALTER TABLE cities ADD location POINT');
     }
 
     /**

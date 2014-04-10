@@ -14,11 +14,11 @@ class CreateUsersCitiesTable extends Migration {
     {
         Schema::create('users_cities', function ($table)
         {
-            $table->integer('user_id');
-            $table->integer('city_id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('city_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('city_id')->references('id')->on('users');
+            $table->foreign('city_id')->references('id')->on('cities');
         });
     }
 

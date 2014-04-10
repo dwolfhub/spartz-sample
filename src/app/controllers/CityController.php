@@ -16,7 +16,7 @@ class CityController extends BaseController {
     /**
      * Given a state, retrieve a list of cities
      * @param  String $state
-     * @return Mixed
+     * @return Array
      */
     public function citiesByState($state)
     {
@@ -32,15 +32,16 @@ class CityController extends BaseController {
         }
 
         // get cities by state
-        $cities = $this->queryRepo->getCitiesByState($state);
+        $cities = $this->queryRepo->getCitiesByState($state, $page);
         if ($cities === []) {
-            return Response::make([
-                'error' => 'Invalid State.'
+            return Response::json([
+                'error' => 'State not found.'
             ], 404);
         }
 
         // cache value for 2 hours and return data
         Cache::put($cacheKey, $cities, 120);
+
         return $cities;
     }
 
@@ -68,17 +69,18 @@ class CityController extends BaseController {
 
         // validate city and state
         $city = $this->queryRepo->getCityByStateAndCity($state, $city);
-        if (!$city) {
-            return Response::make([
-                'error' => 'Invalid City.'
+        if ($city === false) {
+            return Response::json([
+                'error' => 'Invalid city or state.'
             ], 404);
         }
 
         // get cities by city and radius
-        $cities = $this->queryRepo->getCitiesByCityAndRadius($city, $radius);
+        $cities = $this->queryRepo->getCitiesByCityAndRadius($city, $radius, $page);
 
         // cache value for 2 hours and return data
         Cache::put($cacheKey, $cities, 120);
+
         return $cities;
     }
 

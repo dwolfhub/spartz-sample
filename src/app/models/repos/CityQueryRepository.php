@@ -17,11 +17,12 @@ class CityQueryRepository implements ICityQueryRepository
         $limit = 500;
         $offset = ($page - 1) * $limit;
 
-        return City::where('state', $state)
-            ->take($limit)
-            ->skip($offset)
-            ->get()
-            ->toArray();
+        $query = City::where('state', 'LIKE', $state);
+
+        return [
+            'count' => $query->count(),
+            'results' => $query->take($limit)->skip($offset)->get()->toArray(),
+        ];
     }
 
     /**
@@ -32,9 +33,16 @@ class CityQueryRepository implements ICityQueryRepository
      */
     public function getCityByStateAndCity($state, $city)
     {
-        return (object) City::where('state', $state)
+        $city = City::where('state', $state)
             ->where('name', $city)
             ->first();
+
+        // return false if city / state doesn't exist
+        if (!$city) {
+            return false;
+        } else {
+            return $city->toArray();
+        }
     }
 
     /**
@@ -43,9 +51,33 @@ class CityQueryRepository implements ICityQueryRepository
      * @param  String $radius (in miles)
      * @return Array
      */
-    public function getCitiesByCityAndRadius($city, $radius, $city)
+    public function getCitiesByCityAndRadius($city, $radius, $page)
     {
+        $limit = 500;
 
+        return [
+            'count' => DB::SELECT(
+                'SELECT COUNT(0) count FROM (
+                    SELECT round( sqrt( (POW( `cities`.`latitude` - ' . $city['latitude'] . ', 2)* 68.1 * 68.1)
+                        + (POW( `cities`.`longitude` - ' . $city['longitude'] . ', 2) * 53.1 * 53.1) ) ) AS distance
+                    FROM cities
+                    WHERE id <> ' . $city['id'] . '
+                    HAVING distance < ' . $radius . '
+                ) a;'
+            )[0]->count,
+
+            'results' => DB::table('cities')
+                ->select(DB::raw(
+                    '`cities`.*, round( sqrt( (POW( `cities`.`latitude` - ' . $city['latitude'] . ', 2)* 68.1 * 68.1)' .
+                    ' + (POW( `cities`.`longitude` - ' . $city['longitude'] . ', 2) * 53.1 * 53.1) ) ) AS distance'
+                ))
+                ->where('id', '<>', $city['id'])
+                ->having('distance', '<', $radius)
+                ->orderBy('distance')
+                ->take($limit)
+                ->skip(($page - 1) * $limit)
+                ->get(),
+        ];
     }
 
 }

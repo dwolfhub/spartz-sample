@@ -90,7 +90,7 @@ apache:
     mod_pagespeed: 0
     mod_spdy: 0
 nginx:
-    install: ''
+    install: '1'
     vhosts:
         CYMaD7fl3kak:
             server_name: spartz.dev
@@ -111,7 +111,6 @@ php:
             - cli
             - intl
             - mcrypt
-            - mbstring
         pear: {  }
         pecl:
             - pecl_http
