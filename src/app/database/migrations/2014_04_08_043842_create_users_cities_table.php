@@ -19,6 +19,9 @@ class CreateUsersCitiesTable extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('city_id')->references('id')->on('cities');
+
+            $table->index('user_id');
+            $table->index('city_id');
         });
     }
 
