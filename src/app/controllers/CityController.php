@@ -33,7 +33,7 @@ class CityController extends BaseController {
 
         // get cities by state
         $cities = $this->queryRepo->getCitiesByState($state, $page);
-        if ($cities === []) {
+        if ($cities['results'] === []) {
             return Response::json([
                 'error' => 'State not found.'
             ], 404);
